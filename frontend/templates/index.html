@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gerador de Resumos</title>
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@500&family=Open+Sans:wght@400;700&family=Roboto&family=Ubuntu&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="frontend/static/css/index.css" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+</head>
+
+<body>
+    <header>
+        <div class="brand">
+          <img src="" alt="Logo do projeto">
+        </div>
+        <h1>Gerador de resumos</h1>
+    </header>
+
+    <div class="tutorial-wrapper">
+        <div id="tutorial">
+          <img src="frontend/static/img/tutorial.svg" alt="Imagem de um ponto de interrogação">
+          <span>Saiba como usar</span>
+          
+            <div id="tutorial-tooltip">
+              <b>Selecionar processo:</b>
+              <ol>
+                <li>Digite o número do processo em "Número do processo";</li>
+                <li>Clique no botão "Gerar Resumo";</li>
+                <li>O resumo aparecerá abaixo dos campos de seleção e anexo.</li>
+              </ol><br>
+          
+              <b>Anexar arquivo do seu computador:</b>
+              <ol>
+                <li>Selecione um documento PDF do seu computador;</li>
+                <li>Clique no botão "Gerar Resumo";</li>
+                <li>O resumo do arquivo aparecerá abaixo dos campos de seleção e anexo.</li>
+              </ol><br>
+              <b>Documentos disponíveis para visualização de resumo</b>
+              <ol>
+                <li>ARE1467492</li>
+                <li>ARE1467493</li>
+                <li>RE1461810</li>
+                <li>RE1463299</li>
+              </ol>
+            </div>
+        </div>
+    </div>
+
+    <main>
+        <div class="header-preform">
+            <h1>Gerar Resumo</h1>
+            <p>Insira o número do processo ou anexe um arquivo PDF para gerar um resumo automaticamente.</p>
+        </div>
+
+        <form id="processNumberForm">
+            <div class="row">
+                <div class="item">
+                    <label for="processNumber">Número do Processo:</label>
+                    <div class="input-text">
+                        <input type="text" id="processNumber" name="process_number" placeholder="Digite o número do processo">
+                    </div>
+                </div>
+            </div>
+
+            <div class="row item-align-left">
+                <button type="submit">Gerar Resumo pelo Número do Processo</button>
+            </div>
+        </form>
+
+        <form id="pdfUploadForm" enctype="multipart/form-data">
+            <div class="row">
+                <div class="item">
+                    <label for="file">Selecionar PDF:</label>
+                    <div class="input-file">
+                        <label class="label" for="file">
+                            <span id="fileName">Nenhum arquivo selecionado</span>
+                            <input type="file" id="file" name="file" accept=".pdf" style="display:none">
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row item-align-left">
+                <button type="submit">Gerar Resumo do PDF</button>
+            </div>
+        </form>
+
+        <hr>
+
+        <!-- Contêiner para exibir o resumo gerado -->
+        <p>Seu resumo irá aparecer aqui:</p>
+        <div id="summary-container">
+            <div id="summary-content">
+                <div class="summary-header">
+                    <button id="copyButton">Copiar</button>
+                    <button id="downloadButton">Baixar PDF</button>
+                </div>
+                <p id="summary-text"></p>
+            </div>
+        </div>
+    </main>
+
+<!--____________________________________________________________________________________________________________________________-->
+
+    <script>
+        document.getElementById('file').addEventListener('change', function() {
+            const fileName = this.files[0] ? this.files[0].name : "Nenhum arquivo selecionado";
+            document.getElementById('fileName').textContent = fileName;
+        });
+
+        // Função para exibir "Processando"
+        function showProcessing() {
+            document.getElementById('summary-text').textContent = 'Gerando resumo, isso pode demorar um tempinho...';
+        }
+
+        // Função para buscar resumo pelo número do processo (GET)
+        document.getElementById('processNumberForm').onsubmit = async function(event) {
+            event.preventDefault();
+            
+            const processNumber = document.getElementById('processNumber').value;
+
+            if (!processNumber) {
+                document.getElementById('summary-text').textContent = 'Por favor, insira o número do processo.';
+                return;
+            }
+
+            // Mostrar "Processando" antes de enviar a requisição
+            showProcessing();
+
+            try {
+                const response = await fetch(`/pdf/generate-summary/?process_number=${encodeURIComponent(processNumber)}`);
+                
+                if (response.ok) {
+                    const generatedSummary = await response.text();
+                    document.getElementById('summary-text').textContent = `Número do Processo: ${processNumber}\n\n${generatedSummary}`;
+                } else {
+                    document.getElementById('summary-text').textContent = 'Erro ao gerar o resumo pelo número do processo.';
+                }
+            } catch (error) {
+                document.getElementById('summary-text').textContent = 'Erro de conexão ao gerar o resumo.';
+            }
+        };
+
+        // Função para upload de PDF e gerar resumo (POST)
+        document.getElementById('pdfUploadForm').onsubmit = async function(event) {
+            event.preventDefault();
+
+            const formData = new FormData(this);
+
+            // Mostrar "Processando" antes de enviar a requisição
+            showProcessing();
+
+            try {
+                const response = await fetch('/pdf/upload-pdf/', {
+                    method: 'POST',
+                    body: formData
+                });
+
+                if (response.ok) {
+                    const generatedSummary = await response.text();
+                    document.getElementById('summary-text').textContent = generatedSummary;
+                } else {
+                    document.getElementById('summary-text').textContent = 'Erro ao gerar o resumo do PDF.';
+                }
+            } catch (error) {
+                document.getElementById('summary-text').textContent = 'Erro de conexão ao gerar o resumo.';
+            }
+        };
+
+        // Função para copiar o resumo
+        document.getElementById('copyButton').addEventListener('click', function() {
+            const summaryContent = document.getElementById('summary-text').textContent;
+            navigator.clipboard.writeText(summaryContent)
+                .then(() => alert('Resumo copiado!'))
+                .catch(err => alert('Erro ao copiar o resumo.'));
+        });
+
+        // Função para baixar o resumo como PDF usando jsPDF
+        document.getElementById('downloadButton').addEventListener('click', function() {
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF();
+
+            const summaryContent = document.getElementById('summary-text').textContent;
+            const processNumber = document.getElementById('processNumber').value || 'processo';
+
+            // Configurações de layout do PDF
+            const marginLeft = 10;
+            const marginTop = 10;
+            const maxLineWidth = 180; // Largura máxima de texto por linha (180 mm)
+            const lineHeight = 10; // Altura da linha no PDF
+            const pageHeight = doc.internal.pageSize.height; // Altura da página em mm
+            let currentPageHeight = marginTop;
+
+            // Dividir o conteúdo em linhas que caibam no PDF
+            const lines = doc.splitTextToSize(summaryContent, maxLineWidth);
+
+            // Adicionar cada linha ao PDF, criando novas páginas se necessário
+            lines.forEach((line) => {
+                if (currentPageHeight + lineHeight > pageHeight) {
+                    doc.addPage(); // Adiciona uma nova página se passar da altura
+                    currentPageHeight = marginTop; // Reseta a altura para o início da nova página
+                }
+                doc.text(line, marginLeft, currentPageHeight);
+                currentPageHeight += lineHeight; // Incrementa a altura conforme as linhas são adicionadas
+            });
+
+            // Salvar o arquivo como PDF
+            doc.save(`resumo_${processNumber}.pdf`);
+    });
+    </script>
+
+    <footer>
+        © Todos os direitos reservados.
+</body>
+</html>
