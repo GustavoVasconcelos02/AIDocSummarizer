@@ -1,0 +1,224 @@
+* {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+    font-family: "Open Sans", sans-serif;
+  }
+  
+  body {
+    position: relative;
+  }
+  
+  header {
+    display: flex;
+    align-items: center;  
+    justify-content: space-between;  
+    background-color: #000000;
+    color: #fff;
+    padding: 12px 40px;  
+    font-size: 16px;  
+  }
+  
+  
+  header .brand img {
+    height: 40px;  
+  }
+  
+  h1 {
+    margin: 0;
+    font-size: 24px;  
+  }
+  
+  .tutorial-wrapper {
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: flex-end;
+    padding: 0 80px;
+    margin: 0 0 20px 0;
+    color: #000000;
+  }
+  
+  @media (max-width: 1440px) {
+    .tutorial-wrapper {
+        margin: 0 0 40px 0;
+    }
+  }
+  
+  #tutorial {
+    display: flex;
+    position: relative;
+    transition: all 0.3s;
+  }
+  
+  #tutorial #tutorial-tooltip {
+    visibility: hidden;
+    width: 25vw;
+    padding: 24px 24px 24px 48px;
+    position: absolute;
+    top: 32px;
+    right: 64px;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0px 4px 12px 0px rgba(0, 0, 0, 0.25);
+  }
+  
+  @media (max-width: 1280px) {
+    #tutorial #tutorial-tooltip {
+        width: 45vw;
+    }
+  }
+  
+  #tutorial:hover #tutorial-tooltip {
+    visibility: visible;
+  }
+  
+  #tutorial img {
+    margin: 0 8px 0 0;
+  }
+  
+  #tutorial span,
+  #tutorial img {
+    cursor: default;
+  }
+  
+  main {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 24px;
+  }
+  
+  main .header-preform {
+    text-align: center;
+    width: 45%;
+    margin-bottom: 40px;
+  }
+  
+  main form {
+    display: flex;
+    flex-direction: column;
+    width: 50%;
+  }
+  
+  main hr {
+    margin: 40px 0 24px;
+    border-color: #002F4D;
+  }
+  
+  main .row {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    gap: 16px;
+    margin-bottom: 10px;
+  }
+  
+  main .row .item {
+    display: flex;
+    flex-direction: column;
+    text-align: left;
+    font-weight: 700;
+    flex: 1;
+  }
+  
+  main .row .item .input-text {
+    display: flex;
+    align-items: center;
+    outline: 1px solid #979292;
+    border-radius: 8px;
+    width: 100%;
+  }
+  
+  main .row .item .input-text input {
+    width: 100%;
+    padding: 16px;
+    font-size: 18px;
+    border: none;
+    outline: none;
+  }
+  
+  main .row .item .input-file {
+    display: flex;
+    justify-content: space-between;
+    outline: 1px solid #979292;
+    border-radius: 8px;
+    width: 100%;
+    padding: 8px 16px;
+  }
+  
+  main .row .item .input-file .label {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    padding: 8px 16px;
+    background-color: #EFEFEF;
+  }
+  
+  main .row .item-align-left {
+    display: flex;
+    justify-content: flex-end;
+  }
+  
+  button {
+    width: 290px;
+    border-radius: 8px;
+    background-color: #000000;
+    color: #fff;
+    padding: 16px;
+    font-size: 18px;
+    cursor: pointer;
+    margin-top: 10px;
+  }
+  
+  button:hover {
+    background-color: rgb(172, 83, 0);
+  }
+  
+  footer {
+    position: fixed;
+    width: 100%;
+    padding: 8px;
+    background-color: #1A1A1A;
+    color: #fff;
+    text-align: center;
+  }
+  
+  #summary-container {
+    position: relative;   
+    border: 2px solid #ddd;  
+    border-radius: 8px;   
+    padding: 16px;        
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); 
+    background-color: #f9f9f9;  
+    margin-top: 20px;    
+    min-height: 200px;   
+  }
+  
+  #summary-content {
+    font-size: 16px;      
+    line-height: 1.5;     
+    color: #333;          
+    white-space: pre-wrap;
+  }
+  
+  .summary-header {
+    display: flex;               
+    justify-content: flex-end;  
+    gap: 10px;                   
+  }
+  
+  .summary-header button {
+    font-size: 12px;
+    padding: 4px 8px;            
+    border-radius: 4px;          
+    background-color: #000000;   
+    color: #fff;                 
+    cursor: pointer;             
+    transition: background-color 0.3s; 
+  }
+  
+  .summary-header button:hover {
+    background-color: rgb(172, 83, 0); 
+  }
