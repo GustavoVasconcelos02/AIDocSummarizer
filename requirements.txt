@@ -1,0 +1,6 @@
+uvicorn
+fastapi
+pymupdf
+jinja2
+python-dotenv
+python-multipart
