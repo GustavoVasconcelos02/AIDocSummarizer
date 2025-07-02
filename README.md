@@ -1,4 +1,4 @@
-# PDF Text Extractor API
+# Gerador de Resumos com LLM
 
 ## Visão Geral
 Este projeto é uma API desenvolvida em Python usando FastAPI para extrair texto de arquivos PDF e gerar resumos utilizando um modelo de inteligência artificial da AWS Bedrock. O objetivo é processar documentos legais e gerar resumos detalhados com base em perguntas predefinidas.
